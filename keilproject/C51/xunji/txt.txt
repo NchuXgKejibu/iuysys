@@ -1,0 +1,295 @@
+
+65~
+TR0=1;
+    ServoAngle=90;
+    while(1)
+    {
+        if(KEY_U==0)
+        {
+            delay_ms(10);
+            if(KEY_U==0)
+            {
+                ServoAngle+=1;
+                if(ServoAngle>100)
+                    ServoAngle=100;
+            }
+            while(!KEY_U);
+        }
+        if(KEY_D==0)
+        {
+            delay_ms(10);
+            if(KEY_D==0)
+            {
+                ServoAngle-=1;
+                if(ServoAngle<60)
+                    ServoAngle=60;
+            }
+            while(!KEY_D);
+        }
+        
+        ServoControl(ServoAngle);
+    }
+
+
+while(1)
+    {
+        switch(Angle)
+        {
+/***********************************/
+            case 0x7e:
+            {    
+                MOTOR(MOTORSpeed);
+                ServoControl(90);
+
+            }
+            break;
+/***********************************/
+            case 0x00:
+            {
+                MOTOR(MOTORSpeed);
+            }
+            break;
+/***********************************/            
+            case 0x18:
+            {
+                MOTOR(MOTORSpeed);
+                ServoControl(90);
+            }
+            break;
+/***********************************/
+            case 0x10:
+            {
+                ServoControl(80);
+            }
+            break;
+/***********************************/
+            case 0x20:
+            {
+                ServoControl(72);
+                //MOTOR(MOTORSpeed-20);   
+            }
+            break;
+/***********************************/
+            case 0x40:
+            {
+                ServoControl(60);
+                //MOTOR(MOTORSpeed-20);    
+            }
+            break;
+/***********************************/
+/***********************************/
+            case 0x08:
+            {
+                ServoControl(93);   
+            }
+            break;
+/***********************************/
+            case 0x04:
+            {
+                ServoControl(100);
+
+            }
+            break; 
+/***********************************/            
+            case 0x02:
+            {
+                ServoControl(110); 
+            }
+            break;
+/***********************************/
+
+        } 
+
+
+
+
+
+while(1)
+    {
+        int i;
+        for(i=60;i<120;i++)
+        {
+            ServoControl(i);
+            _nop();
+        }
+        for(i=120;i>60;i--)
+        {
+            ServoControl(i);
+            _nop();
+        }
+    }
+
+if(ServoCount>200)
+    {
+        ServoCount=1;
+        Countflag++;
+        if(Countflag>6)
+        {
+            Countflag=1;
+            ServoAngle=90;
+        }
+    }
+
+
+Countflag++;
+        if(Countflag>1)
+        {
+            Countflag=0;
+            if(P_Angle>ServoAngle)
+            {
+                P_Angle--;
+                if(P_Angle==ServoAngle)
+                   P_Angle=ServoAngle; 
+            }
+            else if(P_Angle<ServoAngle)
+            {
+                P_Angle++;
+                if(P_Angle==ServoAngle)
+                   P_Angle=ServoAngle;
+            }
+            else
+                P_Angle=ServoAngle;
+        }
+
+
+
+
+
+
+
+void PWM_interrupt(void) interrupt 5
+{
+	TF2=0;
+	MOTORCount++;
+	ServoCount++;
+    //Angle=(~P2)&0x7e;
+	MOTORCount=MOTORCount>10?1:MOTORCount;
+	ServoCount=ServoCount>200?1:ServoCount;
+	if(MOTORCount<(MOTORSpeed/10))
+		PWM0=1;
+	else
+		PWM0=0;
+	if(ServoCount<(ServoCount/9)+5)
+		Servo0=1;
+	else
+		Servo0=0;	
+}
+
+
+
+while(1)
+    {
+        if((Angle>_crol_(Angle1,2))||(Angle<_cror_(Angle1,2)))
+        {
+            Angle=Angle1;
+        }
+        else
+        {
+            Angle1=Angle;
+        }
+        switch(Angle)
+        {
+/***********************************
+            case 0x00:
+            {
+                MOTOR(MOTORSpeed);
+                switch(AngleFlag)
+                {
+                    
+                    case 1:{ServoControl(55);MOTOR(MOTORSpeed-10);}break;
+                    case 2:{ServoControl(65);MOTOR(MOTORSpeed-10);}break;
+                    case 3:{ServoControl(75);MOTOR(MOTORSpeed-10);}break;
+                    
+                    case 5:{ServoControl(95);MOTOR(MOTORSpeed-10);}break;
+                    case 6:{ServoControl(110);MOTOR(MOTORSpeed-10);}break;
+                    case 7:{ServoControl(120);MOTOR(MOTORSpeed-10);}break;
+                    
+                    //case 3:{ServoControl(81);MOTOR(MOTORSpeed);}break;
+                    //case 5:{ServoControl(91);MOTOR(MOTORSpeed);}break;
+                           
+                }
+            }
+            break;
+/***********************************/
+            case 0x7e:
+            case 0x42:
+            {
+                ServoControl(90);
+                MOTOR(MOTORSpeed);
+            }
+            break;
+
+
+/***********************************/
+            case 0x10:
+            {
+                MOTOR(MOTORSpeed-10);
+                ServoControl(85);
+                AngleFlag=3;
+            }
+            break;
+/***********************************/
+            case 0x20:
+            {
+                MOTOR(MOTORSpeed-20);
+                ServoControl(75);
+                AngleFlag=2;   
+            }
+            break;
+/***********************************/
+            case 0x40:
+            {
+                MOTOR(MOTORSpeed-20);
+                ServoControl(55);
+                AngleFlag=1;    
+            }
+            break;
+/***********************************/
+/***********************************/            
+            case 0x18:
+            {
+                MOTOR(MOTORSpeed);
+                ServoControl(90);
+                AngleFlag=4;
+            }
+            break;
+/***********************************/
+/***********************************/ 
+            case 0x08:
+            {
+                MOTOR(MOTORSpeed-10);
+                ServoControl(91);
+                AngleFlag=5;   
+            }
+            break;
+/***********************************/
+            case 0x04:
+            {
+                MOTOR(MOTORSpeed-20);
+                ServoControl(105);
+                AngleFlag=6;
+            }
+            break; 
+/***********************************/            
+            case 0x02:
+            {
+                MOTOR(MOTORSpeed-20);
+                ServoControl(120);
+                AngleFlag=7; 
+            }
+            break;
+/***********************************/
+
+        }
+        if(((AngleFlag-AngleFlag1)>2)||((AngleFlag-AngleFlag1)<-2))
+        {
+            AngleFlag=AngleFlag1;
+        }
+        else
+        {
+            AngleFlag1=AngleFlag;
+        }
+        MOTOR(MOTORSpeed);    
+    }
+    
+          
